@@ -1,14 +1,31 @@
 # Full report
 
-The complete report submitted to the NetMob 2026 Data Challenge organisers.
+**Looking for the analysis code? It is in [`../code`](../code).**
 
-Per the challenge terms this document remains **confidential**: it is used to
-select awardees and to decide whether the work is presented as a talk or a
-poster. Its sources are therefore not published in this repository.
+The 2-page extended abstract links here, so this note explains what is and is
+not in this directory.
 
-Every number in it is reproducible from the analysis code and artifacts in
-[`../code`](../code), given access to the dataset. The scripts behind the main
-results are `ablation_norain.py` (the rainfall circularity ablation),
-`threshold_calib.py` (per-line threshold calibration), `baseline_raw.py` (the
-raw-feature baselines), `exp_gatebias_leadlag.py` (the quality-gate bias and
-lead–lag checks), and `make_report_figs.py` (the report figures).
+## The report itself is not published here
+
+Per the challenge terms the complete report remains **confidential**: the
+organisers use it to select awardees and to decide whether the work is
+presented as a talk or a poster. Its sources are therefore not in this
+repository.
+
+## Everything in it is reproducible
+
+Given access to the dataset, every number in the report comes out of
+[`../code`](../code). The scripts behind the main results are:
+
+| Script | Result |
+| :--- | :--- |
+| `ablation_norain.py` | the rainfall circularity ablation |
+| `threshold_calib.py` | per-line threshold calibration |
+| `baseline_raw.py` | the raw-feature baselines |
+| `exp_gatebias_leadlag.py` | quality-gate bias and the lead--lag check |
+| `exp_e10_chronic.py` | chronic line-directions and concentration |
+| `make_report_figs.py` | the report figures |
+
+The dataset is released under an NDA to admitted challenge participants and is
+not redistributed here. See the [root README](../README.md) for how to place
+your own copy.

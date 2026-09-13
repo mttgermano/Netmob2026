@@ -9,8 +9,7 @@ Duncan and Chen (2023) from network-censorship detection to public transport.
 | Path | Contents |
 | :--- | :--- |
 | `code/` | The full analysis pipeline: preprocessing, autoencoders, baselines, and every experiment script behind the reported numbers. See `code/README.md`. |
-| `extended_abstract/` | The 2-page summary submitted to the NetMob 2026 Book of Abstracts. |
-| `full_report/` | The confidential full report submitted to the organisers. |
+| `full_report/` | A pointer to the code behind the confidential full report, which is not published here. |
 
 ## The dataset is not in this repository
 
