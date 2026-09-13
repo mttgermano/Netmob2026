@@ -35,7 +35,23 @@ import numpy as np
 import pandas as pd
 
 # ── paths / constants ──────────────────────────────────────────────────────
-DATA_DIR    = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "data")
+# code/ is a symlink into data_public/Netmob2026/, and __file__ resolves to the
+# real location, so a plain "../data" lands in a directory that does not exist.
+# Walk up from here until we find a data/ holding mobility_data/.
+def _find_data_dir():
+    env = os.environ.get("NETMOB_DATA_DIR")
+    if env:
+        return env
+    here = os.path.dirname(os.path.abspath(__file__))
+    for _ in range(6):
+        cand = os.path.join(here, "data")
+        if os.path.isdir(os.path.join(cand, "mobility_data")):
+            return cand
+        here = os.path.dirname(here)
+    raise RuntimeError("cannot locate a data/ directory containing mobility_data/")
+
+
+DATA_DIR    = _find_data_dir()
 MOBILITY_DIR = os.path.join(DATA_DIR, "mobility_data")
 GTFS_DIR     = os.path.join(DATA_DIR, "GTFS_data")
 WEATHER_CSV  = os.path.join(DATA_DIR, "auxiliar_data", "meteorological_data.csv")
@@ -47,13 +63,17 @@ M_PER_DEG_LON = 111_320.0 * np.cos(np.radians(LAT0))
 
 # trip-instance segmentation / quality gates
 MAX_GAP_SEC        = 30 * 60      # split instance on internal gap > 30 min
-MIN_POINTS         = 10
-MIN_DURATION_SEC   = 8 * 60
-MAX_DURATION_SEC   = 3 * 3600
-MAX_CROSS_TRACK_M  = 200.0        # drop GPS points further than this off-route
-MAX_OFFROUTE_FRAC  = 0.40         # discard instance if more points dropped
-MIN_STOPS_MATCHED  = 5
-MIN_STOP_COVERAGE  = 0.50
+# Overridable so the gate-sensitivity run can relax every filter at once.
+_f = lambda k, d: type(d)(os.environ.get(k, d))
+MIN_POINTS         = _f("NETMOB_MIN_POINTS", 10)
+MIN_DURATION_SEC   = _f("NETMOB_MIN_DUR", 8 * 60)
+MAX_DURATION_SEC   = _f("NETMOB_MAX_DUR", 3 * 3600)
+MAX_CROSS_TRACK_M  = _f("NETMOB_CROSS_TRACK_M", 200.0)  # drop points off-route
+MAX_OFFROUTE_FRAC  = _f("NETMOB_OFFROUTE_FRAC", 0.40)   # discard if more dropped
+# Overridable so the sensitivity analysis can rebuild the dataset with a
+# relaxed label-trust rule without editing this file.
+MIN_STOPS_MATCHED  = int(os.environ.get("NETMOB_MIN_STOPS", 5))
+MIN_STOP_COVERAGE  = float(os.environ.get("NETMOB_MIN_COVERAGE", 0.50))
 
 # label
 DELAY_THRESHOLD_SEC = 300         # median stop delay >= 5 min -> "delayed"
@@ -259,6 +279,8 @@ def process_day(date_str: str, gtfs_index: dict, rain_utc: pd.Series,
     counters = dict(raw_rows=0, service_rows=0, instances_raw=0,
                     no_gtfs=0, too_few_points=0, bad_duration=0,
                     offroute_discard=0, low_stop_coverage=0,
+                    # decomposition of low_stop_coverage into its two clauses
+                    fail_min_stops_only=0, fail_coverage_only=0, fail_both=0,
                     multi_vehicle_tripids=0, midnight_flips=0,
                     day_letter_mismatch=0, sched_mismatch=0, kept=0)
 
@@ -286,11 +308,27 @@ def process_day(date_str: str, gtfs_index: dict, rain_utc: pd.Series,
             g = g.iloc[seg_id == sizes.argmax()]
         instances.append((trip_id, veh, g))
 
-    # multi-vehicle same tripId: keep the segment with the most points
+    # multi-vehicle same tripId. Default keeps the segment with the most points
+    # and discards the rest. With NETMOB_MERGE_MULTIVEH=1 the segments are
+    # instead concatenated in time order, which restores the parts of the route
+    # recorded under a different vehicle id. Merging is only defensible because
+    # 88% of these cases are sequential hand-overs with no temporal overlap;
+    # where segments do overlap the duplicate timestamps are dropped, keeping
+    # the reading from the vehicle that contributed more points.
+    MERGE = os.environ.get("NETMOB_MERGE_MULTIVEH", "0") == "1"
     by_trip: dict[str, tuple] = {}
     for trip_id, veh, g in instances:
         cur = by_trip.get(trip_id)
-        if cur is None or len(g) > len(cur[1]):
+        if cur is None:
+            by_trip[trip_id] = (veh, g)
+        elif MERGE:
+            big, small = (cur[1], g) if len(cur[1]) >= len(g) else (g, cur[1])
+            merged = (pd.concat([big, small])
+                      .sort_values("timestamp")
+                      .drop_duplicates(subset="timestamp", keep="first")
+                      .reset_index(drop=True))
+            by_trip[trip_id] = (cur[0], merged)
+        elif len(g) > len(cur[1]):
             by_trip[trip_id] = (veh, g)
         counters["multi_vehicle_tripids"] += int(cur is not None)
 
@@ -349,6 +387,14 @@ def process_day(date_str: str, gtfs_index: dict, rain_utc: pd.Series,
         coverage = n_matched / max(1, sched.n_stops)
         if n_matched < MIN_STOPS_MATCHED or coverage < MIN_STOP_COVERAGE:
             counters["low_stop_coverage"] += 1
+            few = n_matched < MIN_STOPS_MATCHED
+            low = coverage < MIN_STOP_COVERAGE
+            if few and low:
+                counters["fail_both"] += 1
+            elif few:
+                counters["fail_min_stops_only"] += 1
+            else:
+                counters["fail_coverage_only"] += 1
             continue
         # first time progress crosses each stop's distance (prog_f is monotone)
         arr_sec = np.interp(sched.stop_dist[in_span], prog_f, t_sec_f)

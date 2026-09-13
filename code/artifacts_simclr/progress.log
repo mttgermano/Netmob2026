@@ -1,0 +1,102 @@
+13:34:08 device=cuda N=22,605 delayed=20.9% folds=5 smoke=False
+13:34:08 CV start — 20 service days, 5 folds, N=22605
+13:34:08 FOLD 1/5 start | test days ['2026-03-20', '2026-03-21', '2026-03-27', '2026-03-30']
+13:34:08   [Phase 1] SimCLR pretraining (no labels)...
+13:34:10     SimCLR epoch   1/30 | NT-Xent 2.8168 (chance floor 6.236)
+13:34:15     SimCLR epoch   5/30 | NT-Xent 1.5910 (chance floor 6.236)
+13:34:21     SimCLR epoch  10/30 | NT-Xent 1.3525 (chance floor 6.236)
+13:34:26     SimCLR epoch  15/30 | NT-Xent 1.2300 (chance floor 6.236)
+13:34:32     SimCLR epoch  20/30 | NT-Xent 1.1352 (chance floor 6.236)
+13:34:38     SimCLR epoch  25/30 | NT-Xent 1.0851 (chance floor 6.236)
+13:34:44     SimCLR epoch  30/30 | NT-Xent 1.0612 (chance floor 6.236)
+13:34:44   [shortcut gate] {'is_weekend_auc': 1.0, 'headway_r2': 0.9950785040855408}
+13:34:44   training SimCLR+MLP...
+13:34:47   training SimCLR+XGBoost...
+13:34:48   training SimCLR+RF...
+13:34:49   training SimCLR+LR...
+13:34:51     SimCLR+MLP      F1 0.531 ROC-AUC 0.832
+13:34:51     SimCLR+XGBoost  F1 0.556 ROC-AUC 0.829
+13:34:51     SimCLR+RF       F1 0.544 ROC-AUC 0.824
+13:34:51     SimCLR+LR       F1 0.529 ROC-AUC 0.815
+13:34:51 FOLD 1/5 done -> ./artifacts_simclr/cv_fold1.pkl
+13:34:51 FOLD 2/5 start | test days ['2026-03-14', '2026-03-22', '2026-03-25', '2026-03-28']
+13:34:52   [Phase 1] SimCLR pretraining (no labels)...
+13:34:53     SimCLR epoch   1/30 | NT-Xent 2.8241 (chance floor 6.236)
+13:34:58     SimCLR epoch   5/30 | NT-Xent 1.6293 (chance floor 6.236)
+13:35:04     SimCLR epoch  10/30 | NT-Xent 1.3860 (chance floor 6.236)
+13:35:09     SimCLR epoch  15/30 | NT-Xent 1.2713 (chance floor 6.236)
+13:35:15     SimCLR epoch  20/30 | NT-Xent 1.1745 (chance floor 6.236)
+13:35:21     SimCLR epoch  25/30 | NT-Xent 1.1313 (chance floor 6.236)
+13:35:27     SimCLR epoch  30/30 | NT-Xent 1.1029 (chance floor 6.236)
+13:35:28   [shortcut gate] {'is_weekend_auc': 1.0, 'headway_r2': 0.9924414157867432}
+13:35:28   training SimCLR+MLP...
+13:35:30   training SimCLR+XGBoost...
+13:35:31   training SimCLR+RF...
+13:35:33   training SimCLR+LR...
+13:35:36     SimCLR+MLP      F1 0.523 ROC-AUC 0.819
+13:35:36     SimCLR+XGBoost  F1 0.529 ROC-AUC 0.808
+13:35:36     SimCLR+RF       F1 0.514 ROC-AUC 0.806
+13:35:36     SimCLR+LR       F1 0.526 ROC-AUC 0.800
+13:35:36 FOLD 2/5 done -> ./artifacts_simclr/cv_fold2.pkl
+13:35:36 FOLD 3/5 start | test days ['2026-03-10', '2026-03-13', '2026-03-15', '2026-03-16', '2026-03-29']
+13:35:36   [Phase 1] SimCLR pretraining (no labels)...
+13:35:37     SimCLR epoch   1/30 | NT-Xent 2.7575 (chance floor 6.236)
+13:35:42     SimCLR epoch   5/30 | NT-Xent 1.5857 (chance floor 6.236)
+13:35:48     SimCLR epoch  10/30 | NT-Xent 1.3750 (chance floor 6.236)
+13:35:54     SimCLR epoch  15/30 | NT-Xent 1.2267 (chance floor 6.236)
+13:36:00     SimCLR epoch  20/30 | NT-Xent 1.1483 (chance floor 6.236)
+13:36:06     SimCLR epoch  25/30 | NT-Xent 1.0985 (chance floor 6.236)
+13:36:12     SimCLR epoch  30/30 | NT-Xent 1.0905 (chance floor 6.236)
+13:36:13   [shortcut gate] {'is_weekend_auc': 1.0, 'headway_r2': 0.9901221394538879}
+13:36:13   training SimCLR+MLP...
+13:36:15   training SimCLR+XGBoost...
+13:36:16   training SimCLR+RF...
+13:36:18   training SimCLR+LR...
+13:36:20     SimCLR+MLP      F1 0.480 ROC-AUC 0.800
+13:36:20     SimCLR+XGBoost  F1 0.481 ROC-AUC 0.786
+13:36:20     SimCLR+RF       F1 0.483 ROC-AUC 0.780
+13:36:20     SimCLR+LR       F1 0.466 ROC-AUC 0.784
+13:36:20 FOLD 3/5 done -> ./artifacts_simclr/cv_fold3.pkl
+13:36:20 FOLD 4/5 start | test days ['2026-03-11', '2026-03-12', '2026-03-26']
+13:36:20   [Phase 1] SimCLR pretraining (no labels)...
+13:36:21     SimCLR epoch   1/30 | NT-Xent 2.7701 (chance floor 6.236)
+13:36:26     SimCLR epoch   5/30 | NT-Xent 1.6027 (chance floor 6.236)
+13:36:32     SimCLR epoch  10/30 | NT-Xent 1.3497 (chance floor 6.236)
+13:36:38     SimCLR epoch  15/30 | NT-Xent 1.2242 (chance floor 6.236)
+13:36:44     SimCLR epoch  20/30 | NT-Xent 1.1318 (chance floor 6.236)
+13:36:50     SimCLR epoch  25/30 | NT-Xent 1.0836 (chance floor 6.236)
+13:36:56     SimCLR epoch  30/30 | NT-Xent 1.0637 (chance floor 6.236)
+13:36:56   [shortcut gate] {'headway_r2': 0.9938676357269287}
+13:36:56   training SimCLR+MLP...
+13:36:58   training SimCLR+XGBoost...
+13:36:59   training SimCLR+RF...
+13:37:01   training SimCLR+LR...
+13:37:03     SimCLR+MLP      F1 0.597 ROC-AUC 0.840
+13:37:03     SimCLR+XGBoost  F1 0.607 ROC-AUC 0.841
+13:37:03     SimCLR+RF       F1 0.600 ROC-AUC 0.835
+13:37:03     SimCLR+LR       F1 0.591 ROC-AUC 0.828
+13:37:03 FOLD 4/5 done -> ./artifacts_simclr/cv_fold4.pkl
+13:37:03 FOLD 5/5 start | test days ['2026-03-17', '2026-03-23', '2026-03-24', '2026-03-31']
+13:37:04   [Phase 1] SimCLR pretraining (no labels)...
+13:37:05     SimCLR epoch   1/30 | NT-Xent 2.7010 (chance floor 6.236)
+13:37:10     SimCLR epoch   5/30 | NT-Xent 1.5763 (chance floor 6.236)
+13:37:16     SimCLR epoch  10/30 | NT-Xent 1.3354 (chance floor 6.236)
+13:37:22     SimCLR epoch  15/30 | NT-Xent 1.1923 (chance floor 6.236)
+13:37:28     SimCLR epoch  20/30 | NT-Xent 1.1080 (chance floor 6.236)
+13:37:34     SimCLR epoch  25/30 | NT-Xent 1.0524 (chance floor 6.236)
+13:37:40     SimCLR epoch  30/30 | NT-Xent 1.0392 (chance floor 6.236)
+13:37:40   [shortcut gate] {'headway_r2': 0.9898775219917297}
+13:37:40   training SimCLR+MLP...
+13:37:42   training SimCLR+XGBoost...
+13:37:43   training SimCLR+RF...
+13:37:45   training SimCLR+LR...
+13:37:47     SimCLR+MLP      F1 0.571 ROC-AUC 0.830
+13:37:47     SimCLR+XGBoost  F1 0.576 ROC-AUC 0.832
+13:37:47     SimCLR+RF       F1 0.579 ROC-AUC 0.830
+13:37:47     SimCLR+LR       F1 0.564 ROC-AUC 0.807
+13:37:47 FOLD 5/5 done -> ./artifacts_simclr/cv_fold5.pkl
+13:37:47 CV complete
+13:37:48 [Phase B] kNN anomaly scores from the contrastive embedding
+13:37:48   vs artifacts_ae_cnn: n=22,605 Pearson r=0.213 (p=9.7e-231)  Spearman rho=0.196 (p=1.1e-194)
+13:37:48   vs artifacts_ae_lstm: n=22,605 Pearson r=0.211 (p=2.0e-225)  Spearman rho=0.226 (p=6.0e-259)
+13:37:48 artifacts -> ./artifacts_simclr/

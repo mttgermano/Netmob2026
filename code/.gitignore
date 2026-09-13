@@ -1,4 +1,23 @@
+# ---------------------------------------------------------------------------
+# NetMob 2026 data is distributed under an NDA to admitted participants only.
+# Nothing derived from it closely enough to substitute for the source may be
+# committed here. The caches below hold per-trip GPS sequences and trip
+# metadata, so they stay local.
+# ---------------------------------------------------------------------------
 cache/
+cache_*/
+
+# Aggregated ticketing tables built straight from the NDA dataset.
+# Regenerate with exp_e10_demand_prep.py if you have dataset access.
+artifacts_e10/demand_*.csv
+
+# Model binaries: large, and reproducible by rerunning the pipeline.
+# (Files of these types already committed before this rule stay tracked.)
+*.npz
+*.pkl
+*.tar.gz
+
+# Environments and scratch
 .venv/
 __pycache__/
 .ipynb_checkpoints/

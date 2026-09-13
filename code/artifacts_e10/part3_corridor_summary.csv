@@ -1,0 +1,2 @@
+n_pairs,n_sharing,n_disjoint,mean_r_sharing,mean_r_disjoint,mannwhitney_p,spearman_jaccard_r,spearman_p
+501,68,308,0.1388381208159349,0.06883692349210035,0.0009556478953276622,0.14301099085919963,0.0013294956154576946
