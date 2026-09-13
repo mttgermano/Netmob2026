@@ -289,3 +289,47 @@ sns.despine(ax=ax, left=True, bottom=True)
 fig.savefig(f"{OUT}/fig_importance.png", dpi=220)
 plt.close(fig)
 print("wrote fig_importance.png")
+
+
+# ── Figure: how the delay label is made ──────────────────────────────────
+# Section 3.A states the 5-minute rule and the 20.9% delayed share in prose.
+# The threshold sits on the shoulder of a broad unimodal distribution rather
+# than at a natural gap, and the per-day panel shows the day-to-day spread
+# that motivates grouping cross-validation folds by service date.
+lab = pd.read_parquet("./cache/trips_meta.parquet")
+dly = lab["median_delay_sec"] / 60.0
+CLIP = 40.0
+beyond = ((dly < -CLIP) | (dly > CLIP)).mean()
+
+fig, (axa, axb) = plt.subplots(1, 2, figsize=(11.0, 3.3))
+
+bins = np.arange(-CLIP, CLIP + 1, 1.0)
+axa.hist(dly.clip(-CLIP, CLIP), bins=bins, color=BLUE,
+         edgecolor="white", linewidth=0.3, zorder=3)
+axa.axvspan(5, CLIP, color=RED, alpha=0.07, zorder=1, linewidth=0)
+axa.axvline(5, color=RED, ls="--", lw=1.3, zorder=4)
+axa.annotate("delayed\n(5 min rule)", xy=(5, axa.get_ylim()[1] * 0.86),
+             xytext=(11, axa.get_ylim()[1] * 0.86), color=RED, fontsize=10,
+             va="center", ha="left")
+axa.set_xlabel("median stop delay against schedule (min)")
+axa.set_ylabel("trips")
+axa.set_title("Trip delay distribution")
+axa.set_xlim(-CLIP, CLIP)
+
+day = (lab.assign(d=lab["service_date"].astype(str).str.slice(5))
+          .groupby("d")["delayed"].mean().sort_index())
+axb.bar(range(len(day)), day.values, color=BLUE,
+        edgecolor="white", linewidth=0.5, zorder=3)
+axb.axhline(lab["delayed"].mean(), color=RED, ls="--", lw=1.2, zorder=4,
+            label=f"overall {lab['delayed'].mean():.1%}")
+axb.set_xticks(range(len(day)))
+axb.set_xticklabels(day.index, rotation=60, ha="right", fontsize=8)
+axb.set_xlabel("service date in March 2026")
+axb.set_ylabel("share delayed")
+axb.set_title("Delayed share per service date")
+axb.legend(frameon=False, loc="upper right", fontsize=9)
+
+fig.tight_layout()
+fig.savefig(f"{OUT}/fig_label.png", dpi=220, bbox_inches="tight")
+plt.close(fig)
+print(f"wrote fig_label.png ({beyond:.1%} of trips fall outside +/-{CLIP:.0f} min)")
